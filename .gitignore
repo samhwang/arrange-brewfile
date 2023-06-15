@@ -8,3 +8,7 @@ coverage
 
 # Build output
 dist
+
+# test input & output
+input
+output

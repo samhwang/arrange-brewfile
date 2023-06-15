@@ -1,12 +1,18 @@
 import path from 'node:path';
-import { parseFile, printToFile } from '../src/index';
+import { parseFile, parseBrewStructure, buildOutputContent, printToFile } from '../src/index';
 
 function go() {
   const inputPath = path.resolve(__dirname, '..', 'input', 'Brewfile');
+  console.log(`Reading input from ${inputPath}`);
   const input = parseFile(inputPath);
 
+  const structure = parseBrewStructure(input);
+  const content = buildOutputContent(structure);
+
   const outputPath = path.resolve(__dirname, '..', 'output', 'Brewfile');
-  printToFile(outputPath, '');
+  console.log(`Printing out arranged brewfile to ${outputPath}`);
+  printToFile(outputPath, content);
+  console.log('Complete!');
 }
 
 go();

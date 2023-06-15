@@ -17,6 +17,9 @@
     "format": "rome format --write ./src/**.ts",
     "ci": "rome ci ./src/**.ts"
   },
+  "dependencies": {
+    "zod": "^3.21.4"
+  },
   "devDependencies": {
     "@types/node": "^18.16.16",
     "@vitest/coverage-c8": "^0.31.4",

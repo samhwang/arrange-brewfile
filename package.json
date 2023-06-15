@@ -1,7 +1,7 @@
 {
-  "name": "@samhwang/ts-starter-template",
+  "name": "@samhwang/arrange-brewfile",
   "version": "1.0.0",
-  "description": "TypeScript Starter Template",
+  "description": "Arrange Brewfile alphabetically",
   "scripts": {
     "start": "tsx bin/index.ts",
     "prebuild": "rimraf dist",

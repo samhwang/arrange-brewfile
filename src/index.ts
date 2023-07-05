@@ -8,13 +8,15 @@ export function parseFile(inputPath: string) {
   return content.split('\n');
 }
 
-type Keys = 'taps' | 'brews' | 'casks' | 'vscodes';
+type Keys = 'taps' | 'brews' | 'casks' | 'mas' | 'whalebrews' | 'vscodes';
 type Block = string[];
 type BrewStructure = Record<Keys, Block>;
 
 const tapLine = z.string().startsWith('tap "');
 const brewLine = z.string().startsWith('brew "');
 const caskLine = z.string().startsWith('cask "');
+const masLine = z.string().startsWith('mas "');
+const whalebrewLine = z.string().startsWith('whalebrew "');
 const vscodeLine = z.string().startsWith('vscode "');
 
 export function parseBrewStructure(input: string[]) {
@@ -45,6 +47,20 @@ export function parseBrewStructure(input: string[]) {
         return accumulator;
       }
 
+      const isMasLine = masLine.safeParse(line);
+      if (isMasLine.success) {
+        accumulator.mas.push(line);
+        accumulator.mas.sort();
+        return accumulator;
+      }
+
+      const isWhalebrewLine = whalebrewLine.safeParse(line);
+      if (isWhalebrewLine.success) {
+        accumulator.whalebrews.push(line);
+        accumulator.whalebrews.sort();
+        return accumulator;
+      }
+
       const isVSCodeLine = vscodeLine.safeParse(line);
       if (isVSCodeLine.success) {
         accumulator.vscodes.push(line);
@@ -59,6 +75,8 @@ export function parseBrewStructure(input: string[]) {
       taps: [],
       brews: [],
       casks: [],
+      mas: [],
+      whalebrews: [],
       vscodes: [],
     }
   );

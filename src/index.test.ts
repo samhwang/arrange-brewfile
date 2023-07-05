@@ -75,6 +75,46 @@ describe('End to End Process', () => {
     expect(output).toEqual(expected);
   });
 
+  it('Should have a mas package', () => {
+    const input = ['mas "GarageBand", id: 682658836'];
+    const expected = 'mas "GarageBand", id: 682658836';
+
+    const structure = parseBrewStructure(input);
+    const output = buildOutputContent(structure);
+
+    expect(output).toEqual(expected);
+  });
+
+  it('Should have many mas packages', () => {
+    const input = ['mas "Pages", id: 409201541', 'mas "GarageBand", id: 682658836'];
+    const expected = 'mas "GarageBand", id: 682658836\nmas "Pages", id: 409201541';
+
+    const structure = parseBrewStructure(input);
+    const output = buildOutputContent(structure);
+
+    expect(output).toEqual(expected);
+  });
+
+  it('Should have a whalebrew package', () => {
+    const input = ['whalebrew "whalebrew/wget"'];
+    const expected = 'whalebrew "whalebrew/wget"';
+
+    const structure = parseBrewStructure(input);
+    const output = buildOutputContent(structure);
+
+    expect(output).toEqual(expected);
+  });
+
+  it('Should have many whalebrew packages', () => {
+    const input = ['whalebrew "whalebrew/wget"', 'whalebrew "whalebrew/whalesay"'];
+    const expected = 'whalebrew "whalebrew/wget"\nwhalebrew "whalebrew/whalesay"';
+
+    const structure = parseBrewStructure(input);
+    const output = buildOutputContent(structure);
+
+    expect(output).toEqual(expected);
+  });
+
   it('Should have a vscode package', () => {
     const input = ['vscode "rome.rome"'];
     const expected = 'vscode "rome.rome"';
@@ -95,9 +135,17 @@ describe('End to End Process', () => {
     expect(output).toEqual(expected);
   });
 
-  it('Should contain 1 tap, 1 brew, 1 cask, 1 vscode', () => {
-    const input = ['tap "aws/tap"', 'brew "xz"', 'cask "fork"', 'vscode "rome.rome"'];
-    const expected = 'tap "aws/tap"\n\nbrew "xz"\n\ncask "fork"\n\nvscode "rome.rome"';
+  it('Should contain 1 of each packages', () => {
+    const input = [
+      'tap "aws/tap"',
+      'brew "xz"',
+      'cask "fork"',
+      'mas "GarageBand", id: 682658836',
+      'whalebrew "whalebrew/wget"',
+      'vscode "rome.rome"',
+    ];
+    const expected =
+      'tap "aws/tap"\n\nbrew "xz"\n\ncask "fork"\n\nmas "GarageBand", id: 682658836\n\nwhalebrew "whalebrew/wget"\n\nvscode "rome.rome"';
 
     const structure = parseBrewStructure(input);
     const output = buildOutputContent(structure);

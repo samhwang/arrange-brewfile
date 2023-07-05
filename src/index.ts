@@ -12,6 +12,7 @@ export function parseBrewStructure(input: string[]) {
   const taps: string[] = [];
   const brews: string[] = [];
   const casks: string[] = [];
+  const vscodes: string[] = [];
 
   input.forEach((line) => {
     if (!line || line.length === 0) {
@@ -45,7 +46,8 @@ export function parseBrewStructure(input: string[]) {
     const vscodeLine = z.string().startsWith('vscode "');
     const isVSCodeLine = vscodeLine.safeParse(line);
     if (isVSCodeLine.success) {
-      // Skipping VSCode Plugins
+      vscodes.push(line);
+      vscodes.sort();
       return;
     }
 
@@ -53,7 +55,7 @@ export function parseBrewStructure(input: string[]) {
     return;
   });
 
-  return [taps, brews, casks];
+  return [taps, brews, casks, vscodes];
 }
 
 export function buildOutputContent(structure: string[][]) {

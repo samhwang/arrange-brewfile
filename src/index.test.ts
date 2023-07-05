@@ -1,146 +1,117 @@
 import { describe, it, expect, vi } from 'vitest';
-import { parseBrewStructure, buildOutputContent, BrewStructure } from './index';
+import { parseBrewStructure, buildOutputContent } from './index';
 
 const consoleErrorSpy = vi.spyOn(console, 'error');
 consoleErrorSpy.mockImplementation(() => {});
 
-function getBrewStructure(output: Partial<BrewStructure> = {}) {
-  const emptyOutput: BrewStructure = {
-    taps: [],
-    brews: [],
-    casks: [],
-    vscodes: [],
-  };
-
-  return Object.assign(emptyOutput, output);
-}
-
-describe('parseBrewStructure', () => {
+describe('End to End Process', () => {
   it("Should return empty if input doesn't have content", () => {
     const input = [''];
-    const expected = getBrewStructure();
-    expect(parseBrewStructure(input)).toEqual(expected);
+    const expected = '';
+
+    const structure = parseBrewStructure(input);
+    const output = buildOutputContent(structure);
+
+    expect(output).toEqual(expected);
   });
 
-  it('Should add a tap', () => {
+  it('Should have a tap', () => {
     const input = ['tap "aws/tap"'];
-    const expected = getBrewStructure({ taps: ['tap "aws/tap"'] });
-    expect(parseBrewStructure(input)).toEqual(expected);
+    const expected = 'tap "aws/tap"';
+
+    const structure = parseBrewStructure(input);
+    const output = buildOutputContent(structure);
+
+    expect(output).toEqual(expected);
   });
 
-  it('Should add and sort taps', () => {
+  it('Should have many taps', () => {
     const input = ['tap "beeftornado/rmtree"', 'tap "aws/tap"'];
-    const expected = getBrewStructure({ taps: ['tap "aws/tap"', 'tap "beeftornado/rmtree"'] });
-    expect(parseBrewStructure(input)).toEqual(expected);
+    const expected = 'tap "aws/tap"\ntap "beeftornado/rmtree"';
+
+    const structure = parseBrewStructure(input);
+    const output = buildOutputContent(structure);
+
+    expect(output).toEqual(expected);
   });
 
-  it('Should add a brew', () => {
+  it('Should have a brew', () => {
     const input = ['brew "ack"'];
-    const expected = getBrewStructure({ brews: ['brew "ack"'] });
-    expect(parseBrewStructure(input)).toEqual(expected);
+    const expected = 'brew "ack"';
+
+    const structure = parseBrewStructure(input);
+    const output = buildOutputContent(structure);
+
+    expect(output).toEqual(expected);
   });
 
-  it('Should add and sort brews', () => {
+  it('Should have many brews', () => {
     const input = ['brew "xz"', 'brew "ack"'];
-    const expected = getBrewStructure({ brews: ['brew "ack"', 'brew "xz"'] });
-    expect(parseBrewStructure(input)).toEqual(expected);
+    const expected = 'brew "ack"\nbrew "xz"';
+
+    const structure = parseBrewStructure(input);
+    const output = buildOutputContent(structure);
+
+    expect(output).toEqual(expected);
   });
 
-  it('Should add a cask', () => {
+  it('Should have a cask', () => {
     const input = ['cask "fork"'];
-    const expected = getBrewStructure({ casks: ['cask "fork"'] });
-    expect(parseBrewStructure(input)).toEqual(expected);
+    const expected = 'cask "fork"';
+
+    const structure = parseBrewStructure(input);
+    const output = buildOutputContent(structure);
+
+    expect(output).toEqual(expected);
   });
 
-  it('Should add and sort casks', () => {
+  it('Should have many casks', () => {
     const input = ['cask "fork"', 'cask "canva"'];
-    const expected = getBrewStructure({ casks: ['cask "canva"', 'cask "fork"'] });
-    expect(parseBrewStructure(input)).toEqual(expected);
+    const expected = 'cask "canva"\ncask "fork"';
+
+    const structure = parseBrewStructure(input);
+    const output = buildOutputContent(structure);
+
+    expect(output).toEqual(expected);
   });
 
-  it('Should add vscode package', () => {
+  it('Should have a vscode package', () => {
     const input = ['vscode "rome.rome"'];
-    const expected = getBrewStructure({vscodes: ['vscode "rome.rome"']});
-    expect(parseBrewStructure(input)).toEqual(expected);
+    const expected = 'vscode "rome.rome"';
+
+    const structure = parseBrewStructure(input);
+    const output = buildOutputContent(structure);
+
+    expect(output).toEqual(expected);
   });
 
-  it('Should add and sort vscode packages', () => {
+  it('Should have many vscode packages', () => {
     const input = ['vscode "rome.rome"', 'vscode "esbenp.prettier"'];
-    const expected = getBrewStructure({vscodes: ['vscode "esbenp.prettier"', 'vscode "rome.rome"']});
-    expect(parseBrewStructure(input)).toEqual(expected);
+    const expected = 'vscode "esbenp.prettier"\nvscode "rome.rome"';
+
+    const structure = parseBrewStructure(input);
+    const output = buildOutputContent(structure);
+
+    expect(output).toEqual(expected);
+  });
+
+  it('Should contain 1 tap, 1 brew, 1 cask, 1 vscode', () => {
+    const input = ['tap "aws/tap"', 'brew "xz"', 'cask "fork"', 'vscode "rome.rome"'];
+    const expected = 'tap "aws/tap"\n\nbrew "xz"\n\ncask "fork"\n\nvscode "rome.rome"';
+
+    const structure = parseBrewStructure(input);
+    const output = buildOutputContent(structure);
+
+    expect(output).toEqual(expected);
   });
 
   it('Should ignore invalid lines', () => {
     const input = ['blah "blah.blah"'];
-    const expected = getBrewStructure();
-    expect(parseBrewStructure(input)).toEqual(expected);
-    expect(consoleErrorSpy).toBeCalled();
-  });
-});
-
-describe('buildOutputContent', () => {
-  it('Should return blank if input is empty', () => {
-    const input = getBrewStructure();
     const expected = '';
-    expect(buildOutputContent(input)).toEqual(expected);
-  });
+    const structure = parseBrewStructure(input);
+    const output = buildOutputContent(structure);
 
-  it('Should have a tap', () => {
-    const input = getBrewStructure({ taps: ['tap "aws/tap"'] });
-    const expected = 'tap "aws/tap"';
-    expect(buildOutputContent(input)).toEqual(expected);
-  });
-
-  it('Should have many taps', () => {
-    const input = getBrewStructure({ taps: ['tap "aws/tap"', 'tap "beeftornado/rmtree"'] });
-    const expected = 'tap "aws/tap"\ntap "beeftornado/rmtree"';
-    expect(buildOutputContent(input)).toEqual(expected);
-  });
-
-  it('Should have a brew', () => {
-    const input = getBrewStructure({ brews: ['brew "ack"'] });
-    const expected = 'brew "ack"';
-    expect(buildOutputContent(input)).toEqual(expected);
-  });
-
-  it('Should have many brews', () => {
-    const input = getBrewStructure({ brews: ['brew "ack"', 'brew "xz"'] });
-    const expected = 'brew "ack"\nbrew "xz"';
-    expect(buildOutputContent(input)).toEqual(expected);
-  });
-
-  it('Should have a cask', () => {
-    const input = getBrewStructure({ casks: ['cask "fork"'] });
-    const expected = 'cask "fork"';
-    expect(buildOutputContent(input)).toEqual(expected);
-  });
-
-  it('Should have many casks', () => {
-    const input = getBrewStructure({ casks: ['cask "canva"', 'cask "fork"'] });
-    const expected = 'cask "canva"\ncask "fork"';
-    expect(buildOutputContent(input)).toEqual(expected);
-  });
-
-  it('Should have a vscode package', () => {
-    const input = getBrewStructure({vscodes: ['vscode "rome.rome"']});
-    const expected = 'vscode "rome.rome"';
-    expect(buildOutputContent(input)).toEqual(expected);
-  });
-
-  it('Should have many vscode packages', () => {
-    const input = getBrewStructure({vscodes: ['vscode "esbenp.prettier"', 'vscode "rome.rome"']});
-    const expected = 'vscode "esbenp.prettier"\nvscode "rome.rome"';
-    expect(buildOutputContent(input)).toEqual(expected);
-  });
-
-  it('Should have 1 tap 1 brew 1 cask with a newline between them', () => {
-    const input = getBrewStructure({
-      taps: ['tap "aws/tap"'],
-      brews: ['brew "ack"'],
-      casks: ['cask "canva"'],
-      vscodes: ['vscode "rome.rome"']
-    });
-    const expected = 'tap "aws/tap"\n\nbrew "ack"\n\ncask "canva"\n\nvscode "rome.rome"';
-    expect(buildOutputContent(input)).toEqual(expected);
+    expect(output).toEqual(expected);
+    expect(consoleErrorSpy).toBeCalled();
   });
 });

@@ -10,7 +10,7 @@ export function parseFile(inputPath: string) {
 
 type Keys = 'taps' | 'brews' | 'casks' | 'vscodes';
 type Block = string[];
-export type BrewStructure = Record<Keys, Block>;
+type BrewStructure = Record<Keys, Block>;
 
 const tapLine = z.string().startsWith('tap "');
 const brewLine = z.string().startsWith('brew "');

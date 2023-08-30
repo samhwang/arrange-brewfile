@@ -1,5 +1,5 @@
-import { describe, it, expect, vi } from 'vitest';
-import { parseBrewStructure, buildOutputContent } from './index';
+import { describe, expect, it, vi } from 'vitest';
+import { buildOutputContent, parseBrewStructure } from './index';
 
 const consoleErrorSpy = vi.spyOn(console, 'error');
 consoleErrorSpy.mockImplementation(() => {});

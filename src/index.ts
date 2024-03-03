@@ -12,12 +12,12 @@ type Keys = 'taps' | 'brews' | 'casks' | 'mas' | 'whalebrews' | 'vscodes';
 type Block = string[];
 type BrewStructure = Record<Keys, Block>;
 
-const tapLine = z.string().startsWith('tap "');
-const brewLine = z.string().startsWith('brew "');
-const caskLine = z.string().startsWith('cask "');
-const masLine = z.string().startsWith('mas "');
-const whalebrewLine = z.string().startsWith('whalebrew "');
-const vscodeLine = z.string().startsWith('vscode "');
+const tapLine = z.string().startsWith('tap');
+const brewLine = z.string().startsWith('brew');
+const caskLine = z.string().startsWith('cask');
+const masLine = z.string().startsWith('mas');
+const whalebrewLine = z.string().startsWith('whalebrew');
+const vscodeLine = z.string().startsWith('vscode');
 
 export function parseBrewStructure(input: string[]) {
   return input.reduce<BrewStructure>(
@@ -83,8 +83,8 @@ export function parseBrewStructure(input: string[]) {
 }
 
 export function buildOutputContent(structure: BrewStructure) {
-  return Object.entries(structure)
-    .reduce((accumulator, [key, values]: [string, string[]]) => {
+  return Object.values(structure)
+    .reduce((accumulator, values) => {
       if (values.length === 0) {
         return accumulator;
       }

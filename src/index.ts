@@ -1,23 +1,13 @@
-import fs from 'node:fs';
-import path from 'node:path';
-import { z } from 'zod';
-
-export function parseFile(inputPath: string) {
-  const pathToFile = path.resolve(__dirname, inputPath);
-  const content = fs.readFileSync(pathToFile, { encoding: 'utf-8' }).trim();
-  return content.split('\n');
-}
-
-type Keys = 'taps' | 'brews' | 'casks' | 'mas' | 'whalebrews' | 'vscodes';
-type Block = string[];
-type BrewStructure = Record<Keys, Block>;
-
-const tapLine = z.string().startsWith('tap');
-const brewLine = z.string().startsWith('brew');
-const caskLine = z.string().startsWith('cask');
-const masLine = z.string().startsWith('mas');
-const whalebrewLine = z.string().startsWith('whalebrew');
-const vscodeLine = z.string().startsWith('vscode');
+import {
+  BrewLine,
+  type BrewStructure,
+  CaskLine,
+  MasLine,
+  TapLine,
+  VscodeLine,
+  WhalebrewLine,
+  isInGroup,
+} from './structure';
 
 export function parseBrewStructure(input: string[]) {
   return input.reduce<BrewStructure>(
@@ -26,43 +16,37 @@ export function parseBrewStructure(input: string[]) {
         return accumulator;
       }
 
-      const isTapLine = tapLine.safeParse(line);
-      if (isTapLine.success) {
-        accumulator.taps.push(isTapLine.data);
+      if (isInGroup(line, TapLine)) {
+        accumulator.taps.push(line);
         accumulator.taps.sort();
         return accumulator;
       }
 
-      const isBrewLine = brewLine.safeParse(line);
-      if (isBrewLine.success) {
-        accumulator.brews.push(isBrewLine.data);
+      if (isInGroup(line, BrewLine)) {
+        accumulator.brews.push(line);
         accumulator.brews.sort();
         return accumulator;
       }
 
-      const isCaskLine = caskLine.safeParse(line);
-      if (isCaskLine.success) {
+      if (isInGroup(line, CaskLine)) {
         accumulator.casks.push(line);
         accumulator.casks.sort();
         return accumulator;
       }
 
-      const isMasLine = masLine.safeParse(line);
-      if (isMasLine.success) {
+      if (isInGroup(line, MasLine)) {
         accumulator.mas.push(line);
         accumulator.mas.sort();
         return accumulator;
       }
 
-      const isWhalebrewLine = whalebrewLine.safeParse(line);
-      if (isWhalebrewLine.success) {
+      if (isInGroup(line, WhalebrewLine)) {
         accumulator.whalebrews.push(line);
         accumulator.whalebrews.sort();
         return accumulator;
       }
 
-      const isVSCodeLine = vscodeLine.safeParse(line);
-      if (isVSCodeLine.success) {
+      if (isInGroup(line, VscodeLine)) {
         accumulator.vscodes.push(line);
         accumulator.vscodes.sort();
         return accumulator;
@@ -95,8 +79,4 @@ export function buildOutputContent(structure: BrewStructure) {
       return `${accumulator}${contentBlock}\n`;
     }, '')
     .trim();
-}
-
-export function printToFile(outputPath: string, content: string) {
-  return fs.writeFileSync(outputPath, content, { encoding: 'utf-8' });
 }

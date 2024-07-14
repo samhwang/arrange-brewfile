@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { buildOutputContent, parseBrewStructure } from './index';
+import { buildOutputContent, parseBrewStructure } from './arrange';
 
 const consoleErrorSpy = vi.spyOn(console, 'error');
 consoleErrorSpy.mockImplementation(() => {});
@@ -177,5 +177,3 @@ describe('Arrange Brewfile', () => {
     });
   });
 });
-
-describe('End to End Process', () => {});

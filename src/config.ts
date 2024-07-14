@@ -1,4 +1,4 @@
-import { Keys } from './structure';
+import type { Keys } from './structure';
 
 /**
  * Config for excluding optional tools like mas, whalebrew, and vscode.

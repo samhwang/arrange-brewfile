@@ -1,6 +1,6 @@
 import path from 'node:path';
 import { parseFile, printToFile } from '../src/file';
-import { buildOutputContent, parseBrewStructure } from '../src/index';
+import { buildOutputContent, parseBrewStructure } from '../src/arrange';
 
 function go() {
   const inputPath = path.resolve(__dirname, '..', 'input', 'Brewfile');

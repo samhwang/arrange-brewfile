@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { buildOutputContent, parseBrewStructure } from './arrange';
+import { arrangeBrewfile } from './arrange';
 
 const consoleErrorSpy = vi.spyOn(console, 'error');
 consoleErrorSpy.mockImplementation(() => {});
@@ -10,8 +10,7 @@ describe('Arrange Brewfile', () => {
       const input = ['tap "aws/tap"'];
       const expected = 'tap "aws/tap"';
 
-      const structure = parseBrewStructure(input);
-      const output = buildOutputContent(structure);
+      const output = arrangeBrewfile(input);
 
       expect(output).toEqual(expected);
     });
@@ -20,8 +19,7 @@ describe('Arrange Brewfile', () => {
       const input = ['tap "beeftornado/rmtree"', 'tap "aws/tap"'];
       const expected = 'tap "aws/tap"\ntap "beeftornado/rmtree"';
 
-      const structure = parseBrewStructure(input);
-      const output = buildOutputContent(structure);
+      const output = arrangeBrewfile(input);
 
       expect(output).toEqual(expected);
     });
@@ -32,8 +30,7 @@ describe('Arrange Brewfile', () => {
       const input = ['brew "ack"'];
       const expected = 'brew "ack"';
 
-      const structure = parseBrewStructure(input);
-      const output = buildOutputContent(structure);
+      const output = arrangeBrewfile(input);
 
       expect(output).toEqual(expected);
     });
@@ -42,8 +39,7 @@ describe('Arrange Brewfile', () => {
       const input = ['brew "xz"', 'brew "ack"'];
       const expected = 'brew "ack"\nbrew "xz"';
 
-      const structure = parseBrewStructure(input);
-      const output = buildOutputContent(structure);
+      const output = arrangeBrewfile(input);
 
       expect(output).toEqual(expected);
     });
@@ -54,8 +50,7 @@ describe('Arrange Brewfile', () => {
       const input = ['cask "fork"'];
       const expected = 'cask "fork"';
 
-      const structure = parseBrewStructure(input);
-      const output = buildOutputContent(structure);
+      const output = arrangeBrewfile(input);
 
       expect(output).toEqual(expected);
     });
@@ -64,8 +59,7 @@ describe('Arrange Brewfile', () => {
       const input = ['cask "fork"', 'cask "canva"'];
       const expected = 'cask "canva"\ncask "fork"';
 
-      const structure = parseBrewStructure(input);
-      const output = buildOutputContent(structure);
+      const output = arrangeBrewfile(input);
 
       expect(output).toEqual(expected);
     });
@@ -76,8 +70,7 @@ describe('Arrange Brewfile', () => {
       const input = ['mas "GarageBand", id: 682658836'];
       const expected = 'mas "GarageBand", id: 682658836';
 
-      const structure = parseBrewStructure(input);
-      const output = buildOutputContent(structure);
+      const output = arrangeBrewfile(input);
 
       expect(output).toEqual(expected);
     });
@@ -86,8 +79,7 @@ describe('Arrange Brewfile', () => {
       const input = ['mas "Pages", id: 409201541', 'mas "GarageBand", id: 682658836'];
       const expected = 'mas "GarageBand", id: 682658836\nmas "Pages", id: 409201541';
 
-      const structure = parseBrewStructure(input);
-      const output = buildOutputContent(structure);
+      const output = arrangeBrewfile(input);
 
       expect(output).toEqual(expected);
     });
@@ -98,8 +90,7 @@ describe('Arrange Brewfile', () => {
       const input = ['whalebrew "whalebrew/wget"'];
       const expected = 'whalebrew "whalebrew/wget"';
 
-      const structure = parseBrewStructure(input);
-      const output = buildOutputContent(structure);
+      const output = arrangeBrewfile(input);
 
       expect(output).toEqual(expected);
     });
@@ -108,8 +99,7 @@ describe('Arrange Brewfile', () => {
       const input = ['whalebrew "whalebrew/wget"', 'whalebrew "whalebrew/whalesay"'];
       const expected = 'whalebrew "whalebrew/wget"\nwhalebrew "whalebrew/whalesay"';
 
-      const structure = parseBrewStructure(input);
-      const output = buildOutputContent(structure);
+      const output = arrangeBrewfile(input);
 
       expect(output).toEqual(expected);
     });
@@ -120,8 +110,7 @@ describe('Arrange Brewfile', () => {
       const input = ['vscode "rome.rome"'];
       const expected = 'vscode "rome.rome"';
 
-      const structure = parseBrewStructure(input);
-      const output = buildOutputContent(structure);
+      const output = arrangeBrewfile(input);
 
       expect(output).toEqual(expected);
     });
@@ -130,8 +119,7 @@ describe('Arrange Brewfile', () => {
       const input = ['vscode "rome.rome"', 'vscode "esbenp.prettier"'];
       const expected = 'vscode "esbenp.prettier"\nvscode "rome.rome"';
 
-      const structure = parseBrewStructure(input);
-      const output = buildOutputContent(structure);
+      const output = arrangeBrewfile(input);
 
       expect(output).toEqual(expected);
     });
@@ -142,8 +130,7 @@ describe('Arrange Brewfile', () => {
       const input = [''];
       const expected = '';
 
-      const structure = parseBrewStructure(input);
-      const output = buildOutputContent(structure);
+      const output = arrangeBrewfile(input);
 
       expect(output).toEqual(expected);
     });
@@ -160,8 +147,7 @@ describe('Arrange Brewfile', () => {
       const expected =
         'tap "aws/tap"\n\nbrew "xz"\n\ncask "fork"\n\nmas "GarageBand", id: 682658836\n\nwhalebrew "whalebrew/wget"\n\nvscode "rome.rome"';
 
-      const structure = parseBrewStructure(input);
-      const output = buildOutputContent(structure);
+      const output = arrangeBrewfile(input);
 
       expect(output).toEqual(expected);
     });
@@ -169,8 +155,7 @@ describe('Arrange Brewfile', () => {
     it('Should ignore invalid lines', () => {
       const input = ['blah "blah.blah"'];
       const expected = '';
-      const structure = parseBrewStructure(input);
-      const output = buildOutputContent(structure);
+      const output = arrangeBrewfile(input);
 
       expect(output).toEqual(expected);
       expect(consoleErrorSpy).toBeCalled();

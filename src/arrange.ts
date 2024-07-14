@@ -80,3 +80,9 @@ export function buildOutputContent(structure: BrewStructure) {
     }, '')
     .trim();
 }
+
+export function arrangeBrewfile(input: string[]) {
+  const structure = parseBrewStructure(input);
+  const output = buildOutputContent(structure);
+  return output;
+}

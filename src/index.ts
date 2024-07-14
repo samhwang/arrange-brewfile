@@ -35,8 +35,8 @@ export function parseBrewStructure(input: string[]) {
       }
 
       if (isInGroup(line, MasLine)) {
-        accumulator.mas.push(line);
-        accumulator.mas.sort();
+        accumulator.mass.push(line);
+        accumulator.mass.sort();
         return accumulator;
       }
 
@@ -59,7 +59,7 @@ export function parseBrewStructure(input: string[]) {
       taps: [],
       brews: [],
       casks: [],
-      mas: [],
+      mass: [],
       whalebrews: [],
       vscodes: [],
     }

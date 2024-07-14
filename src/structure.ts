@@ -1,8 +1,9 @@
 import { z } from 'zod';
 
-type Keys = 'taps' | 'brews' | 'casks' | 'mas' | 'whalebrews' | 'vscodes';
+export type Keys = 'tap' | 'brew' | 'cask' | 'mas' | 'whalebrew' | 'vscode';
+type PluralKeys = `${Keys}s`;
 type Block = string[];
-export type BrewStructure = Record<Keys, Block>;
+export type BrewStructure = Record<PluralKeys, Block>;
 
 export const TapLine = z.string().startsWith('tap');
 export type TapLine = z.infer<typeof TapLine>;

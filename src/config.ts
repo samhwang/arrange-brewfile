@@ -5,6 +5,7 @@ import type { Keys } from './structure';
  * These are not required to be installed, only tap, cask and brew.
  */
 export type ExcludeOptionalConfig = Record<Extract<Keys, 'mas' | 'whalebrew' | 'vscode'>, boolean>;
+export type ExcludeOptionalParams = Partial<ExcludeOptionalConfig>;
 export const DEFAULT_EXCLUDE_OPTIONAL_CONFIG: ExcludeOptionalConfig = {
   mas: false,
   whalebrew: false,

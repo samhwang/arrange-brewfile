@@ -83,6 +83,15 @@ describe('Arrange Brewfile', () => {
 
       expect(output).toEqual(expected);
     });
+
+    it('Should ignore mas packages if config is excluded', () => {
+      const input = ['mas "Pages", id: 409201541', 'mas "GarageBand", id: 682658836'];
+      const expected = '';
+
+      const output = arrangeBrewfile(input, { mas: true });
+
+      expect(output).toEqual(expected);
+    });
   });
 
   describe('whalebrew', () => {
@@ -103,6 +112,15 @@ describe('Arrange Brewfile', () => {
 
       expect(output).toEqual(expected);
     });
+
+    it('Should ignore whalebrew packages if config is excluded', () => {
+      const input = ['whalebrew "whalebrew/wget"', 'whalebrew "whalebrew/whalesay"'];
+      const expected = '';
+
+      const output = arrangeBrewfile(input, { whalebrew: true });
+
+      expect(output).toEqual(expected);
+    });
   });
 
   describe('vscode', () => {
@@ -120,6 +138,15 @@ describe('Arrange Brewfile', () => {
       const expected = 'vscode "esbenp.prettier"\nvscode "rome.rome"';
 
       const output = arrangeBrewfile(input);
+
+      expect(output).toEqual(expected);
+    });
+
+    it('Should ignore vscode packages if config is excluded', () => {
+      const input = ['vscode "rome.rome"', 'vscode "esbenp.prettier"'];
+      const expected = '';
+
+      const output = arrangeBrewfile(input, { vscode: true });
 
       expect(output).toEqual(expected);
     });

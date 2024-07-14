@@ -1,3 +1,4 @@
+import { DEFAULT_EXCLUDE_OPTIONAL_CONFIG, type ExcludeOptionalParams } from './config';
 import {
   BrewLine,
   type BrewStructure,
@@ -9,7 +10,9 @@ import {
   isInGroup,
 } from './structure';
 
-export function parseBrewStructure(input: string[]) {
+export function parseBrewStructure(input: string[], excludeOptionalParams?: ExcludeOptionalParams) {
+  const excludeOptionalConfig = { ...DEFAULT_EXCLUDE_OPTIONAL_CONFIG, ...excludeOptionalParams };
+
   return input.reduce<BrewStructure>(
     (accumulator, line) => {
       if (!line || line.length === 0) {
@@ -34,15 +37,28 @@ export function parseBrewStructure(input: string[]) {
         return accumulator;
       }
 
+      if (isInGroup(line, MasLine) && excludeOptionalConfig.mas) {
+        console.log(excludeOptionalConfig);
+        return accumulator;
+      }
+
       if (isInGroup(line, MasLine)) {
         accumulator.mass.push(line);
         accumulator.mass.sort();
         return accumulator;
       }
 
+      if (isInGroup(line, WhalebrewLine) && excludeOptionalConfig.whalebrew) {
+        return accumulator;
+      }
+
       if (isInGroup(line, WhalebrewLine)) {
         accumulator.whalebrews.push(line);
         accumulator.whalebrews.sort();
+        return accumulator;
+      }
+
+      if (isInGroup(line, VscodeLine) && excludeOptionalConfig.vscode) {
         return accumulator;
       }
 
@@ -81,8 +97,8 @@ export function buildOutputContent(structure: BrewStructure) {
     .trim();
 }
 
-export function arrangeBrewfile(input: string[]) {
-  const structure = parseBrewStructure(input);
+export function arrangeBrewfile(input: string[], excludeOptionalParams?: ExcludeOptionalParams) {
+  const structure = parseBrewStructure(input, excludeOptionalParams);
   const output = buildOutputContent(structure);
   return output;
 }

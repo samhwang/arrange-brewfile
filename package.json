@@ -12,8 +12,8 @@
     "test:watch": "vitest watch",
     "test:CI": "pnpm run test && pnpm run typecheck",
     "lint": "biome check .",
-    "lint:fix": "biome check --apply .",
-    "lint:fix:unsafe": "biome check --apply-unsafe .",
+    "lint:fix": "biome check --write .",
+    "lint:fix:unsafe": "biome check --write --unsafe .",
     "format": "biome format --write .",
     "ci": "biome ci ."
   },
